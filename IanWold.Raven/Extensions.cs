@@ -73,8 +73,8 @@ namespace IanWold.Raven
 			return services;
 		}
 
-		public async static Task DeleteByIdAsync<T>(this IAsyncDocumentSession session, string id, CancellationToken cancellationToken) =>
-			session.Delete(await session.LoadAsync<T>(id, cancellationToken));
+		public async static Task DeleteByIdAsync<T>(this IAsyncDocumentSession session, Guid id, CancellationToken cancellationToken) =>
+			session.Delete(await session.LoadAsync<T>(id.ToString(), cancellationToken));
 
 		public async static Task<T> InsertAsync<T>(this IAsyncDocumentSession session, T entity, CancellationToken cancellationToken)
 		{
@@ -85,9 +85,9 @@ namespace IanWold.Raven
 		public async static Task<IEnumerable<T>> QueryAsync<T>(this IAsyncDocumentSession session, Func<IRavenQueryable<T>, IQueryable<T>> query, CancellationToken cancellationToken) =>
 			await query(session.Query<T>()).ToListAsync(cancellationToken);
 
-		public async static Task<T> UpdateByIdAsync<T>(this IAsyncDocumentSession session, string id, Action<T> update, CancellationToken cancellationToken)
+		public async static Task<T> UpdateByIdAsync<T>(this IAsyncDocumentSession session, Guid id, Action<T> update, CancellationToken cancellationToken)
 		{
-			var entity = await session.LoadAsync<T>(id, cancellationToken);
+			var entity = await session.LoadAsync<T>(id.ToString(), cancellationToken);
 			update(entity);
 			return entity;
 		}
